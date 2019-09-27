@@ -1114,7 +1114,9 @@ void displayport_hpd_changed(int state)
 		displayport_set_switch_state(displayport, 1);
 		timeout = wait_event_interruptible_timeout(displayport->dp_wait,
 			(displayport->state == DISPLAYPORT_STATE_ON), msecs_to_jiffies(3000));
+#ifdef CONFIG_SND_SOC_SAMSUNG_DISPLAYPORT
 		dp_ado_switch_set_state(edid_audio_informs());
+#endif
 		if (!timeout)
 			displayport_err("enable timeout\n");
 	} else {
@@ -1143,8 +1145,9 @@ void displayport_hpd_changed(int state)
 			displayport_info("bist mode off\n");
 			goto HPD_FAIL;
 		}
-
+#ifdef CONFIG_SND_SOC_SAMSUNG_DISPLAYPORT
 		dp_ado_switch_set_state(-1);
+#endif
 		displayport_info("audio info = -1\n");
 		timeout = wait_event_interruptible_timeout(displayport->audio_wait,
 				(displayport->audio_state == 0), msecs_to_jiffies(5000));
@@ -1201,8 +1204,9 @@ void displayport_hpd_unplug(void)
 	displayport->hpd_state = HPD_UNPLUG;
 	displayport->hpd_current_state = HPD_UNPLUG;
 	displayport->cur_video = V640X480P60;
-
+#ifdef CONFIG_SND_SOC_SAMSUNG_DISPLAYPORT
 	dp_ado_switch_set_state(-1);
+#endif
 	displayport_set_switch_state(displayport, 0);
 	timeout = wait_event_interruptible_timeout(displayport->dp_wait,
 			(displayport->state == DISPLAYPORT_STATE_OFF), msecs_to_jiffies(1000));
@@ -1643,7 +1647,9 @@ static void displayport_hpd_irq_work(struct work_struct *work)
 #ifdef CONFIG_SEC_DISPLAYPORT_BIGDATA
 			secdp_bigdata_inc_error_cnt(ERR_INF_IRQHPD);
 #endif
+#if defined(CONFIG_EXYNOS_HDCP2)
 			hdcp_dplink_set_reauth();
+#endif
 			displayport_hdcp22_enable(0);
 
 			displayport_link_training();

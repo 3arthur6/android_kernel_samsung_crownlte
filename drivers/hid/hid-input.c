@@ -93,7 +93,9 @@ static bool match_index(struct hid_usage *usage,
 
 typedef bool (*hid_usage_cmp_t)(struct hid_usage *usage,
 				unsigned int cur_idx, unsigned int val);
+#ifdef CONFIG_UHID
 extern bool lcd_is_on;
+#endif
 
 static struct hid_usage *hidinput_find_key(struct hid_device *hid,
 					   hid_usage_cmp_t match,
@@ -1303,11 +1305,13 @@ static void hidinput_led_worker(struct work_struct *work)
 	buf = hid_alloc_report_buf(report, GFP_KERNEL);
 	if (!buf)
 		return;
+#ifdef CONFIG_UHID
 	if (!lcd_is_on) {
 		dbg_hid("lcd is off, don't report LED event\n");
 		kfree(buf);
 		return;
 	}
+#endif
 
 	hid_output_report(report, buf);
 	/* synchronous output report */

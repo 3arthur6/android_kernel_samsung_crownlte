@@ -106,8 +106,9 @@ void abox_debug_string_update(void)
 						"m%d:%05lu", data->audio_mode, (unsigned long) p_debug_data->mode_time);
 
 buff_done:
+#ifdef CONFIG_SEC_DEBUG_EXTRA_INFO
 	sec_debug_set_extra_info_rvd1(p_debug_data->dbg_str_buf);
-
+#endif
 	kfree(p_debug_data->dbg_str_buf);
 	p_debug_data->dbg_str_buf = NULL;
 	mutex_unlock(&p_debug_data->dbg_lock);
