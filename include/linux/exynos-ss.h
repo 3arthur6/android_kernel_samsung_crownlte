@@ -61,7 +61,7 @@ extern void exynos_ss_acpm(unsigned long long timestamp, const char *log, unsign
 #ifdef CONFIG_EXYNOS_SNAPSHOT_REGULATOR
 extern void exynos_ss_regulator(unsigned long long timestamp, char* f_name, unsigned int addr, unsigned int volt, unsigned int rvolt, int en);
 #else
-#define exynos_ss_regulator(a, b, c, d, e)         do { } while (0)
+#define exynos_ss_regulator(a, b, c, d, e, f)         do { } while (0)
 #endif
 
 #ifdef CONFIG_EXYNOS_SNAPSHOT_THERMAL
@@ -162,7 +162,7 @@ extern void exynos_ss_irq_exit(unsigned int irq, unsigned long long start_time);
 #endif
 
 
-#ifdef CONFIG_S3C2410_WATCHDOG
+#if defined(CONFIG_S3C2410_WATCHDOG) && defined(CONFIG_EXYNOS_SNAPSHOT_WATCHDOG_RESET)
 extern int s3c2410wdt_set_emergency_stop(int index);
 extern int s3c2410wdt_set_emergency_reset(unsigned int timeout, int index);
 extern int s3c2410wdt_keepalive_emergency(bool reset, int index);

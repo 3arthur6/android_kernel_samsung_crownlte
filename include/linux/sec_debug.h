@@ -349,8 +349,6 @@ struct sec_debug_shared_info {
 	char last_klog[SZ_1K];
 };
 
-extern void sec_debug_set_kallsyms_info(struct sec_debug_ksyms *ksyms, int magic);
-
 #ifdef CONFIG_SEC_DEBUG_EXTRA_INFO
 
 extern struct exynos_chipid_info exynos_soc_info;

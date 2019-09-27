@@ -143,7 +143,7 @@ void panic(const char *fmt, ...)
 	int state = 0;
 	int old_cpu, this_cpu;
 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
-#ifdef CONFIG_SEC_DEBUG_EXTRA_INFO
+#if defined(CONFIG_SEC_DEBUG_EXTRA_INFO) && defined(CONFIG_SEC_DUMP_SUMMARY)
 	struct pt_regs regs;
 
 	regs.regs[30] = _RET_IP_;
@@ -197,7 +197,7 @@ void panic(const char *fmt, ...)
 	if (buf[strlen(buf) - 1] == '\n')
 		buf[strlen(buf) - 1] = '\0';
 #endif
-#ifdef CONFIG_SEC_DEBUG_EXTRA_INFO
+#if defined(CONFIG_SEC_DEBUG_EXTRA_INFO) && defined(CONFIG_SEC_DUMP_SUMMARY)
 	if (strncmp(buf, "Fatal exception", 15))
 		sec_debug_set_extra_info_fault(PANIC_FAULT, (unsigned long)regs.pc, &regs);
 #endif

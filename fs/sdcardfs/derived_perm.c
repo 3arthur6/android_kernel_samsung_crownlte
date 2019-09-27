@@ -33,8 +33,6 @@ static void inherit_derived_state(struct inode *parent, struct inode *child)
 	ci->data->under_cache = pi->data->under_cache;
 	ci->data->under_obb = pi->data->under_obb;
 	set_top(ci, pi->top_data);
-
-	ci->data->under_knox = pi->data->under_knox;
 }
 
 /* helper function for derived state */
@@ -51,8 +49,6 @@ void setup_derived_state(struct inode *inode, perm_t perm, userid_t userid,
 	info->data->under_cache = false;
 	info->data->under_obb = false;
 	set_top(info, top);
-
-	info->data->under_knox = false;
 }
 
 /* While renaming, there is a point where we want the path from dentry,
@@ -73,10 +69,6 @@ void get_derived_permission_inode_new(struct dentry *parent,
 	struct qstr q_obb = QSTR_LITERAL("obb");
 	struct qstr q_media = QSTR_LITERAL("media");
 	struct qstr q_cache = QSTR_LITERAL("cache");
-	/* refer to perm_t in sdcardfs.h */
-	struct qstr q_knox = QSTR_LITERAL("knox");
-	struct qstr q_shared = QSTR_LITERAL("shared");
-
 
 	/* By default, each inode inherits from its parent.
 	 * the properties are maintained on its private fields
@@ -114,11 +106,7 @@ void get_derived_permission_inode_new(struct dentry *parent,
 			info->data->perm = PERM_ANDROID;
 			info->data->under_android = true;
 			set_top(info, info->data);
-		} else if (qstr_case_eq(name, &q_knox)) {
-			info->data->perm = PERM_KNOX_PRE_ROOT;
-			info->data->under_knox = true;
-			set_top(info, info->data);
-		}
+		} 
 		break;
 	case PERM_ANDROID:
 		if (qstr_case_eq(name, &q_data)) {
@@ -152,42 +140,6 @@ void get_derived_permission_inode_new(struct dentry *parent,
 			info->data->perm = PERM_ANDROID_PACKAGE_CACHE;
 			info->data->under_cache = true;
 		}
-		break;
-
-	/* KNOX */
-	case PERM_KNOX_PRE_ROOT:
-		info->data->perm = PERM_KNOX_ROOT;
-		err = kstrtoul(name->name, 10, &user_num);
-		if (err)
-			info->data->userid = 10; /* default container no. */
-		else
-			info->data->userid = user_num;
-		set_top(info, info->data);
-		break;
-	case PERM_KNOX_ROOT:
-		if (qstr_case_eq(name, &q_Android))
-			info->data->perm = PERM_KNOX_ANDROID;
-		break;
-	case PERM_KNOX_ANDROID:
-		if (qstr_case_eq(name, &q_data)) {
-			info->data->perm = PERM_KNOX_ANDROID_DATA;
-		} else if (qstr_case_eq(name, &q_shared)) {
-			info->data->perm = PERM_KNOX_ANDROID_SHARED;
-			info->data->d_uid =
-				multiuser_get_uid(parent_data->userid, 0);
-			set_top(info, info->data);
-		}
-		break;
-	case PERM_KNOX_ANDROID_DATA:
-		info->data->perm = PERM_KNOX_ANDROID_PACKAGE;
-		appid = get_appid(name->name);
-		if (appid != 0 && !is_excluded(name->name, parent_data->userid))
-			info->data->d_uid =
-				multiuser_get_uid(parent_data->userid, appid);
-		set_top(info, info->data);
-		break;
-	case PERM_KNOX_ANDROID_SHARED:
-	case PERM_KNOX_ANDROID_PACKAGE:
 		break;
 	}
 }

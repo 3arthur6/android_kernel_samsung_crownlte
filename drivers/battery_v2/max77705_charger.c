@@ -1793,7 +1793,7 @@ static irqreturn_t max77705_batp_irq(int irq, void *data)
 }
 
 #if defined(CONFIG_MAX77705_CHECK_B2SOVRC)
-#if defined(CONFIG_REGULATOR_S2MPS18)
+#if defined(CONFIG_REGULATOR_S2MPS18) && defined(CONFIG_SEC_PM_DEBUG)
 extern void s2mps18_print_adc_val_power(void);
 #endif
 static irqreturn_t max77705_bat_irq(int irq, void *data)
@@ -1811,7 +1811,7 @@ static irqreturn_t max77705_bat_irq(int irq, void *data)
 		reg_data = ((reg_data & MAX77705_BAT_DTLS) >> MAX77705_BAT_DTLS_SHIFT);
 		if (reg_data == 0x06) {
 			pr_info("OCP(B2SOVRC)\n");
-#if defined(CONFIG_REGULATOR_S2MPS18)
+#if defined(CONFIG_REGULATOR_S2MPS18) && defined(CONFIG_SEC_PM_DEBUG)
 			s2mps18_print_adc_val_power();
 #endif
 			/* print vnow, inow */

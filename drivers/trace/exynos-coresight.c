@@ -60,8 +60,9 @@ struct cs_dbg {
 
 bool FLAG_T32_EN = false;
 static struct cs_dbg dbg;
+ #ifdef CONFIG_HARDLOCKUP_DETECTOR_OTHER_CPU
 extern struct atomic_notifier_head hardlockup_notifier_list;
-
+#endif
 static inline void get_arm_arch_version(int cpu)
 {
 	dbg.arch = CS_READ(dbg.cpu[0].base, MIDR);
@@ -212,6 +213,7 @@ static int exynos_cs_get_pc(int cpu, int iter)
 	return 0;
 }
 
+ #ifdef CONFIG_HARDLOCKUP_DETECTOR_OTHER_CPU
 static int exynos_cs_lockup_handler(struct notifier_block *nb,
 					unsigned long l, void *core)
 {
@@ -243,6 +245,7 @@ static int exynos_cs_lockup_handler(struct notifier_block *nb,
 
 	return 0;
 }
+#endif
 
 static int exynos_cs_panic_handler(struct notifier_block *np,
 				unsigned long l, void *msg)
@@ -286,9 +289,11 @@ static int exynos_cs_panic_handler(struct notifier_block *np,
 	return 0;
 }
 
+ #ifdef CONFIG_HARDLOCKUP_DETECTOR_OTHER_CPU
 static struct notifier_block exynos_cs_lockup_nb = {
 	.notifier_call = exynos_cs_lockup_handler,
 };
+#endif
 
 static struct notifier_block exynos_cs_panic_nb = {
 	.notifier_call = exynos_cs_panic_handler,

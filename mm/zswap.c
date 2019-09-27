@@ -72,8 +72,10 @@ static atomic_t zswap_duplicate_pages = ATOMIC_INIT(0);
 
 /* Pool limit was hit (see zswap_max_pool_percent) */
 static u64 zswap_pool_limit_hit;
+#ifdef CONFIG_ZSMALLOC_STAT
 /* Pages written back when pool limit was reached */
 static u64 zswap_written_back_pages;
+#endif
 /* Store failed due to a reclaim failure after pool limit was reached */
 static u64 zswap_reject_reclaim_fail;
 /* Compressed page was too big for the allocator to (optimally) store */
@@ -1167,10 +1169,12 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
 	/* move it to the tail of the inactive list after end_writeback */
 	SetPageReclaim(page);
 
+#ifdef CONFIG_ZSMALLOC_STAT
 	/* start writeback */
 	__swap_writepage(page, &wbc, end_swap_bio_write);
 	put_page(page);
 	zswap_written_back_pages++;
+#endif
 
 	spin_lock(&tree->lock);
 	/* drop local reference */
@@ -1636,8 +1640,10 @@ static int __init zswap_debugfs_init(void)
 			zswap_debugfs_root, &zswap_reject_kmemcache_fail);
 	debugfs_create_u64("reject_compress_poor", S_IRUGO,
 			zswap_debugfs_root, &zswap_reject_compress_poor);
+#ifdef CONFIG_ZSMALLOC_STAT
 	debugfs_create_u64("written_back_pages", S_IRUGO,
 			zswap_debugfs_root, &zswap_written_back_pages);
+#endif
 	debugfs_create_u64("duplicate_entry", S_IRUGO,
 			zswap_debugfs_root, &zswap_duplicate_entry);
 	debugfs_create_u64("pool_total_size", S_IRUGO,

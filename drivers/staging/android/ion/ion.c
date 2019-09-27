@@ -948,8 +948,13 @@ static int ion_debug_client_show(struct seq_file *s, void *unused)
 		return 0;
 	}
 
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 	seq_printf(s, "%16.s %4.s %16.s %4.s %10.s %8.s %9.s\n",
 		   "task", "pid", "thread", "tid", "size", "# procs", "flag");
+#else
+	seq_printf(s, "%16.s %4.s %10.s %8.s %9.s\n",
+		   "task", "pid", "size", "# procs", "flag");
+#endif
 	seq_printf(s, "----------------------------------------------"
 			"--------------------------------------------\n");
 
@@ -964,10 +969,16 @@ static int ion_debug_client_show(struct seq_file *s, void *unused)
 			names[id] = buffer->heap->name;
 		sizes[id] += buffer->size;
 		sizes_pss[id] += (buffer->size / buffer->handle_count);
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 		seq_printf(s, "%16.s %4u %16.s %4u %10zu %8d %9lx\n",
 			   buffer->task_comm, buffer->pid,
 				buffer->thread_comm, buffer->tid, buffer->size,
 				buffer->handle_count, buffer->flags);
+#else
+		seq_printf(s, "%16.s %4u %10zu %8d %9lx\n",
+				buffer->task_comm, buffer->pid,
+				buffer->size, buffer->handle_count, buffer->flags);
+#endif
 	}
 	mutex_unlock(&client->lock);
 	mutex_unlock(&debugfs_mutex);
@@ -2059,9 +2070,17 @@ static int ion_debug_buffer_show(struct seq_file *s, void *unused)
 		return -ENOMEM;
 	}
 
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 	seq_printf(s, "%20.s %16.s %4.s %16.s %4.s %10.s %4.s %3.s %6.s "
+#else
+	seq_printf(s, "%20.s %16.s %4.s %10.s %4.s %3.s %6.s "
+#endif
 			"%24.s %9.s\n",
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 			"heap", "task", "pid", "thread", "tid",
+#else
+			"heap", "task", "pid", 
+#endif
 			"size", "kmap", "ref", "handle",
 			"master", "flag");
 	seq_printf(s, "------------------------------------------"
@@ -2076,11 +2095,19 @@ static int ion_debug_buffer_show(struct seq_file *s, void *unused)
 		mutex_lock(&buffer->lock);
 		ion_buffer_dump_tasks(buffer, master_name);
 		total_size += buffer->size;
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 		seq_printf(s, "%20.s %16.s %4u %16.s %4u %10zu %4d %3d %6d "
+#else
+		seq_printf(s, "%20.s %16.s %4u %10zu %4d %3d %6d "
+#endif
 				"%24.s %9lx", buffer->heap->name,
 				buffer->task_comm, buffer->pid,
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 				buffer->thread_comm,
 				buffer->tid, buffer->size, buffer->kmap_cnt,
+#else
+				buffer->size, buffer->kmap_cnt,
+#endif
 				atomic_read(&buffer->ref.refcount),
 				buffer->handle_count, master_name,
 				buffer->flags);

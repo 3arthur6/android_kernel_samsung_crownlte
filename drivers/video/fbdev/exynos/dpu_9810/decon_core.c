@@ -104,8 +104,9 @@ void tracing_mark_write(struct decon_device *decon, char id, char *str1, int val
 		decon_err("%s:argument fail\n", __func__);
 		return;
 	}
+#ifdef CONFIG_ION_EXYNOS_STAT_LOG
 	trace_puts(buf);
-
+#endif
 }
 
 static void decon_dump_using_dpp(struct decon_device *decon)
@@ -4035,10 +4036,12 @@ static int decon_remove(struct platform_device *pdev)
 		decon_release_windows(decon->win[i]);
 
 	debugfs_remove_recursive(decon->d.debug_root);
+#ifdef CONFIG_DECON_EVENT_LOG
 	if (decon->d.event_log)
 		kfree(decon->d.event_log);
 
 	decon_info("remove sucessful\n");
+#endif
 	return 0;
 }
 

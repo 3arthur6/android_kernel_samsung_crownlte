@@ -639,7 +639,9 @@ static int exynos_set_peripheral(bool enable)
 	} else {
 		pr_info("%s usb detached\n", __func__);
 		check_usb_vbus_state(0);
+#ifdef CONFIG_KNOX_NCM
 		set_ncm_ready(false);
+#endif
 	}
 	return 0;
 }
