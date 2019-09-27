@@ -1465,8 +1465,8 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
 	raw_spin_lock_irq(&logbuf_lock);
 	if (buf) {
 		u64 next_seq;
-		u64 seq;
-		u32 idx;
+		u64 seq = 0;
+		u32 idx = 0;
 		enum log_flags prev;
 
 		/*

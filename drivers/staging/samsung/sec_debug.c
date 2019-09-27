@@ -270,7 +270,7 @@ static ssize_t store_recovery_cause(struct device *dev, struct device_attribute 
 		pr_err("%s: input buffer length is out of range.\n", __func__);
 		return count;
 	}
-	strncat(recovery_cause, buf, strlen(buf));
+	strlcat(recovery_cause, buf, sizeof(buf));
 
 	sec_set_param_str(recovery_cause_offset, recovery_cause, sizeof(recovery_cause));
 	pr_info("%s: %s, count:%d\n", __func__, recovery_cause, (int)count);

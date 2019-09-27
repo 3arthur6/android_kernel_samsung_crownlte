@@ -300,7 +300,7 @@ static int read_version(struct sock *sk, struct hci_dev *hdev, void *data,
 static int read_commands(struct sock *sk, struct hci_dev *hdev, void *data,
 			 u16 data_len)
 {
-	struct mgmt_rp_read_commands *rp;
+	struct mgmt_rp_read_commands *rp = NULL;
 	u16 num_commands, num_events;
 	size_t rp_size;
 	int i, err;
