@@ -21,9 +21,9 @@
 #include <asm/tlbflush.h>
 #include "internal.h"
 
-extern u64 zswap_pool_pages;
+u64 zswap_pool_pages;
 #if defined(CONFIG_ZSWAP)
-extern atomic_t zswap_stored_pages;
+atomic_t zswap_stored_pages;
 #endif
 
 void task_mem(struct seq_file *m, struct mm_struct *mm)

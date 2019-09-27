@@ -3490,8 +3490,14 @@ static int ext4_ext_convert_to_initialized(handle_t *handle,
 	ex = path[depth].p_ext;
 	ee_block = le32_to_cpu(ex->ee_block);
 	ee_len = ext4_ext_get_actual_len(ex);
+	zero_ex1.ee_block = 0;
 	zero_ex1.ee_len = 0;
+	zero_ex1.ee_start_hi = 0;
+	zero_ex1.ee_start_lo = 0;
+	zero_ex2.ee_block = 0;
 	zero_ex2.ee_len = 0;
+	zero_ex2.ee_start_hi = 0;
+	zero_ex2.ee_start_lo = 0;
 
 	trace_ext4_ext_convert_to_initialized_enter(inode, map, ex);
 

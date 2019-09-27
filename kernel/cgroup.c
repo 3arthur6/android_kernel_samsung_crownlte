@@ -1334,7 +1334,7 @@ static char *cgroup_file_name(struct cgroup *cgrp, const struct cftype *cft,
 			 cgroup_on_dfl(cgrp) ? ss->name : ss->legacy_name,
 			 cft->name);
 	else
-		strncpy(buf, cft->name, CGROUP_FILE_NAME_MAX);
+		memcpy(buf, cft->name, CGROUP_FILE_NAME_MAX);
 	return buf;
 }
 

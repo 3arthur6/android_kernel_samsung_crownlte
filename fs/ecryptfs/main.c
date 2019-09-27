@@ -430,7 +430,7 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 			cipher_name_dst =
 				mount_crypt_stat->
 				global_default_cipher_name;
-			strncpy(cipher_name_dst, cipher_name_src,
+			memcpy(cipher_name_dst, cipher_name_src,
 				ECRYPTFS_MAX_CIPHER_NAME_SIZE);
 			cipher_name_dst[ECRYPTFS_MAX_CIPHER_NAME_SIZE] = '\0';
 			cipher_name_set = 1;
@@ -462,7 +462,7 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 			fnek_src = args[0].from;
 			fnek_dst =
 				mount_crypt_stat->global_default_fnek_sig;
-			strncpy(fnek_dst, fnek_src, ECRYPTFS_SIG_SIZE_HEX);
+			memcpy(fnek_dst, fnek_src, ECRYPTFS_SIG_SIZE_HEX);
 			mount_crypt_stat->global_default_fnek_sig[
 				ECRYPTFS_SIG_SIZE_HEX] = '\0';
 			rc = ecryptfs_add_global_auth_tok(
@@ -484,7 +484,7 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 			fn_cipher_name_src = args[0].from;
 			fn_cipher_name_dst =
 				mount_crypt_stat->global_default_fn_cipher_name;
-			strncpy(fn_cipher_name_dst, fn_cipher_name_src,
+			memcpy(fn_cipher_name_dst, fn_cipher_name_src,
 				ECRYPTFS_MAX_CIPHER_NAME_SIZE);
 			mount_crypt_stat->global_default_fn_cipher_name[
 				ECRYPTFS_MAX_CIPHER_NAME_SIZE] = '\0';
@@ -559,7 +559,7 @@ static int ecryptfs_parse_options(struct ecryptfs_sb_info *sbi, char *options,
 				return -ENOMEM;
 			}
 
-			strncpy(label_dst, label_src, ECRYPTFS_LABEL_SIZE);
+			memcpy(label_dst, label_src, ECRYPTFS_LABEL_SIZE);
 			break;
 #ifdef CONFIG_SDP
 		case ecryptfs_opt_userid: {

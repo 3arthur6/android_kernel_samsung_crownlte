@@ -2933,7 +2933,7 @@ wl_cfg80211_notify_ifadd(struct net_device *dev,
 		if_event_info->ifidx = ifidx;
 		if_event_info->bssidx = bssidx;
 		if_event_info->role = role;
-		strncpy(if_event_info->name, name, IFNAMSIZ);
+		memcpy(if_event_info->name, name, IFNAMSIZ);
 		if_event_info->name[IFNAMSIZ] = '\0';
 		if (mac)
 			memcpy(if_event_info->mac, mac, ETHER_ADDR_LEN);
