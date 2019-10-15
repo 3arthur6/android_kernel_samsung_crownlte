@@ -674,7 +674,7 @@ else
 ifdef CONFIG_PROFILE_ALL_BRANCHES
 KBUILD_CFLAGS	+= -O2 $(call cc-disable-warning,maybe-uninitialized,)
 else
-KBUILD_CFLAGS   += -O2 -mcpu=exynos-m1+crc+crypto
+KBUILD_CFLAGS   += -O2 -mcpu=cortex-a55+crc+nocrypto
 endif
 endif
 
